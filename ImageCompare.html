@@ -119,13 +119,13 @@ input.materialize-textarea:focus:not([readonly]) {
         class="waves-effect waves-light btn-large"
         style="background-color: white; color: black; width: 100%;"
         onclick="skip()"
-        >Skip</a
+        >Overslaan</a
       >
       <a
         class="waves-effect waves-light btn-large"
         style="background-color: #03a9f4; width: 100%;"
         onclick="submit()"
-        >Submit</a
+        >Versturen</a
       >
     </div>
   </div>
@@ -140,7 +140,7 @@ input.materialize-textarea:focus:not([readonly]) {
         >keyboard_arrow_left</i
       >
       <div style="color: #717171; padding: 0px 10px;" id="externalid">
-        Label this asset
+        Label deze plaatjes
       </div>
       <i
         id="next"
@@ -390,7 +390,7 @@ input.materialize-textarea:focus:not([readonly]) {
   function getHtmlForAsset({ leftImage, rightImage }) {
     return `
       <div style="display: flex; flex-direction: column;">
-        <div style="font-size: 25px; margin: 10px;">Instructions: Select a preferred image...</div>
+        <div style="font-size: 25px; margin: 10px;">Welke afbeelding spreekt je meer aan?</div>
         <div style="display: flex; flex-direction: row; justify-content: space-around;">
           <img class="asset" src="${
             leftImage.url
@@ -404,13 +404,13 @@ input.materialize-textarea:focus:not([readonly]) {
             <input class="with-gap" type="radio" name="group-image-compare" id="chose-${
               leftImage.id
             }" />
-            <span style="font-size: 20px; margin-top: 20px;">Image A</span>
+            <span style="font-size: 20px; margin-top: 20px;">Afbeelding A</span>
           </label>
           <label style="display: flex; justify-content: center; flex: 47">
             <input class="with-gap" type="radio" name="group-image-compare" id="chose-${
               rightImage.id
             }" />
-            <span style="font-size: 20px; margin-top: 20px;">Image B</span>
+            <span style="font-size: 20px; margin-top: 20px;">Afbeelding B</span>
           </label>
         </div>
       </div>
