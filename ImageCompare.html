@@ -8,7 +8,97 @@
 />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="https://api.labelbox.com/static/labeling-api.js"></script>
-<link rel="stylesheet" href="styles.css" />
+<style>
+.app {
+  height: 100vh;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-grow {
+  display: flex;
+  flex-grow: 1;
+}
+
+.content {
+  margin: 0px 20px;
+}
+
+.asset {
+  max-width: 40%;
+  max-height: 40%;
+}
+
+.sidebar {
+  display: flex;
+  height: 100vh;
+  border-right: 1px solid #e8e8e8;
+  width: 300px;
+  min-width: 300px;
+}
+
+.text {
+  background-color: #ececec;
+  padding: 30px;
+  font-size: 20px;
+  overflow: auto;
+  font-style: italic;
+}
+
+.navbar {
+  padding: 10px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.btn {
+  background-color: aqua
+}
+
+.btn:visited {
+  background-color: yellow
+}
+
+.btn:hover {
+  background-color: skyblue
+}
+
+.btn:active {
+  background-color: pink;
+}
+
+.btn:focus {
+  background-color: pink;
+}
+
+#questions {
+  padding: 10px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.label {
+  color: #717171;
+}
+
+.question {
+  margin-bottom: 15px;
+}
+
+[type="radio"]:checked+span:after, [type="radio"].with-gap:checked+span:before, [type="radio"].with-gap:checked+span:after {
+  border-color: #03a9f4 !important;
+}
+
+[type="checkbox"].filled-in:checked+span:not(.lever):after {
+  border-color: #03a9f4 !important;
+  background-color: #03a9f4 !important;
+}
+
+input.materialize-textarea:focus:not([readonly]) {
+  border-color: #03a9f4 !important;
+}
+</style>
 
 <div class="app flex-grow">
   <div class="flex-column sidebar">
@@ -190,8 +280,8 @@
   });
 
   function drawQuestions(classifications, answers) {
-    if (answers && answers.chosenVideoId) {
-      document.querySelector("#chose-" + answers.chosenVideoId).checked = true;
+    if (answers && answers.chosenImageId) {
+      document.querySelector("#chose-" + answers.chosenImageId).checked = true;
     }
 
     document.querySelector("#questions").innerHTML = classifications
@@ -218,20 +308,20 @@
     });
   }
 
-  function getChosenVideoId() {
-    if (document.querySelector("#chose-" + state.leftVideoId).checked) {
-      return state.leftVideoId;
+  function getChosenImageId() {
+    if (document.querySelector("#chose-" + state.leftImageId).checked) {
+      return state.leftImageId;
     }
 
-    if (document.querySelector("#chose-" + state.rightVideoId).checked) {
-      return state.rightVideoId;
+    if (document.querySelector("#chose-" + state.rightImageId).checked) {
+      return state.rightImageId;
     }
 
     return;
   }
 
   function getLabel() {
-    const chosenVideoId = getChosenVideoId();
+    const chosenImageId = getChosenImageId();
     const getAnswer = node => {
       const key = node.getAttribute("id");
       const type = node.getAttribute("questiontype");
@@ -266,7 +356,7 @@
       document.querySelector("#questions").children
     ).map(getAnswer);
 
-    return Object.assign({ chosenVideoId }, ...answers);
+    return Object.assign({ chosenImageId }, ...answers);
   }
 
   function submit() {
@@ -297,37 +387,37 @@
     }
   }
 
-  function getHtmlForAsset({ leftVideo, rightVideo }) {
+  function getHtmlForAsset({ leftImage, rightImage }) {
     return `
       <div style="display: flex; flex-direction: column;">
-        <div style="font-size: 25px; margin: 10px;">Instructions: Select a preferred video...</div>
+        <div style="font-size: 25px; margin: 10px;">Instructions: Select a preferred image...</div>
         <div style="display: flex; flex-direction: row; justify-content: space-around;">
-          <video class="asset" src="${
-            leftVideo.url
-          }" controls style="flex: 47" id="${leftVideo.id}"></video>
-          <video class="asset" src="${
-            rightVideo.url
-          }" controls style="flex: 47" id="${rightVideo.id}"></video>
+          <img class="asset" src="${
+            leftImage.url
+          }" controls style="flex: 47" id="${leftImage.id}"></img>
+          <img class="asset" src="${
+            rightImage.url
+          }" controls style="flex: 47" id="${rightImage.id}"></img>
         </div>
         <div style="display: flex; flex-direction: row;">
           <label style="display: flex; justify-content: center; flex: 47">
-            <input class="with-gap" type="radio" name="group-video-compare" id="chose-${
-              leftVideo.id
+            <input class="with-gap" type="radio" name="group-image-compare" id="chose-${
+              leftImage.id
             }" />
-            <span style="font-size: 20px; margin-top: 20px;">Video A</span>
+            <span style="font-size: 20px; margin-top: 20px;">Image A</span>
           </label>
           <label style="display: flex; justify-content: center; flex: 47">
-            <input class="with-gap" type="radio" name="group-video-compare" id="chose-${
-              rightVideo.id
+            <input class="with-gap" type="radio" name="group-image-compare" id="chose-${
+              rightImage.id
             }" />
-            <span style="font-size: 20px; margin-top: 20px;">Video B</span>
+            <span style="font-size: 20px; margin-top: 20px;">Image B</span>
           </label>
         </div>
       </div>
     `;
   }
 
-  function getVideos(data) {
+  function getImages(data) {
     try {
       const {
         compare: { a, b }
@@ -338,8 +428,8 @@
         );
       }
       return {
-        leftVideo: a,
-        rightVideo: b
+        leftImage: a,
+        rightImage: b
       };
     } catch (e) {
       console.log(e);
@@ -347,7 +437,7 @@
         "DataRow format does not match this template. Please see the chrome console for more information"
       );
       throw new Error(
-        `Please see the example dataset. DataRows must match this format "{\"compare\":{\"a\":{\"id\":\"your-db-id-89E30C47-5807-5622-AA3D-D390AFE53728\",\"url\":\"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4\"},\"b\":{\"id\":\"your-db-id-0D10F70F-F865-A5B0-A548-7CB0176324AF\",\"url\":\"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4\"}}}". Not ${data}`
+        `Please see the example dataset. DataRows must match this format "{\"compare\":{\"a\":{\"id\":\"your-db-id-89E30C47-5807-5622-AA3D-D390AFE53728\",\"url\":\"http://commondatastorage.googleapis.com/gtv-images-bucket/sample/BigBuckBunny.mp4\"},\"b\":{\"id\":\"your-db-id-0D10F70F-F865-A5B0-A548-7CB0176324AF\",\"url\":\"http://commondatastorage.googleapis.com/gtv-images-bucket/sample/ElephantsDream.mp4\"}}}". Not ${data}`
       );
     }
   }
@@ -361,11 +451,11 @@
     nextButton.style.opacity = hasNext ? 1 : 0.2;
     nextButton.style.cursor = hasNext ? "pointer" : "inherit";
 
-    const { leftVideo, rightVideo } = getVideos(asset.data);
+    const { leftImage, rightImage } = getImages(asset.data);
     if ((state.currentAsset && state.currentAsset.data) !== asset.data) {
       document.querySelector("#asset").innerHTML = getHtmlForAsset({
-        leftVideo,
-        rightVideo
+        leftImage,
+        rightImage
       });
     }
     if ((state.currentAsset && state.currentAsset.id) !== asset.id) {
@@ -383,8 +473,8 @@
     state = {
       ...state,
       currentAsset: asset,
-      leftVideoId: leftVideo.id,
-      rightVideoId: rightVideo.id
+      leftImageId: leftImage.id,
+      rightImageId: rightImage.id
     };
   }
 </script>
