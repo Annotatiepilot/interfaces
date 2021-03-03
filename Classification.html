@@ -69,6 +69,7 @@ height: 100%;
 }
 .label{
 color: #717171;
+line-height: 1;
 }
 .question{
 margin-bottom: 15px;
@@ -85,6 +86,10 @@ background-color: #03a9f4 !important;
 
 }
 
+[type="checkbox"]+span:not(.lever) {
+    height: inherit;
+    line-height: inherit;
+}
 input.materialize-textarea:focus:not([readonly]) {
 border-color: #03a9f4 !important;
 }
@@ -200,7 +205,7 @@ border-color: #03a9f4 !important;
   function createOptionQuestion({ type, name, options, instructions }, answer) {
     const createOption = ({ value, label }) => {
       return `
-      <p value=${value}>
+      <p value=${value} ${label.substring(0, 2) == '- ' ? 'style="margin-left:16px;"': ''}>
         <label>
           ${
             type == "radio"
@@ -211,7 +216,11 @@ border-color: #03a9f4 !important;
                   (answer || []).indexOf(value) !== -1 ? "checked" : ""
                 } />`
           }
-          <span>${label}</span>
+          <span>
+            ${
+                label.substring(0, 2) == '- ' ? label.substring(2) : label
+            }
+          </span>
         </label>
       </p>
     `;
